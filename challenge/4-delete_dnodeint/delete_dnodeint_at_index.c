@@ -1,3 +1,4 @@
+
 #include "lists.h"
 #include <stdlib.h>
 
@@ -11,52 +12,53 @@
  */
 int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 {
-    dlistint_t *current = *head;
-    unsigned int p = 0;
+	dlistint_t *saved_head;
+	dlistint_t *tmp;
+	unsigned int p;
 
-    /* Check if the list is empty */
-    if (*head == NULL)
-    {
-        return (-1);
-    }
+	if (*head == NULL) /* If the list is empty, return failure */
+	{
+		return (-1);
+	}
 
-    /* Traverse to the node at the given index */
-    while (current != NULL && p < index)
-    {
-        current = current->next;
-        p++;
-    }
+	saved_head = *head;
+	p = 0;
 
-    /* If the index is out of bounds */
-    if (current == NULL)
-    {
-        return (-1);
-    }
+	/* Traverse the list to find the node at the specified index */
+	while (p < index && *head != NULL)
+	{
+		*head = (*head)->next;
+		p++;
+	}
 
-    /* If deleting the head node */
-    if (current->prev == NULL)
-    {
-        *head = current->next;
-        if (*head != NULL)
-        {
-            (*head)->prev = NULL;
-        }
-    }
-    else
-    {
-        /* Update the previous node's next pointer */
-        current->prev->next = current->next;
-    }
+	/* If the index is out of range */
+	if (p != index)
+	{
+		*head = saved_head;
+		return (-1);
+	}
 
-    /* If deleting a node that has a next node */
-    if (current->next != NULL)
-    {
-        /* Update the next node's prev pointer */
-        current->next->prev = current->prev;
-    }
+	/* Deleting the node at the specific index */
+	if (p == 0) /* Special case for deleting the first node */
+	{
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+		if (tmp != NULL)
+		{
+			tmp->prev = NULL;
+		}
+	}
+	else /* Deleting a node other than the first one */
+	{
+		(*head)->prev->next = (*head)->next;
 
-    /* Free the node */
-    free(current);
+		if ((*head)->next != NULL)
+			(*head)->next->prev = (*head)->prev;
 
-    return (1);
+		free(*head);
+		*head = saved_head;
+	}
+
+	return (1); /* Successful deletion */
 }
