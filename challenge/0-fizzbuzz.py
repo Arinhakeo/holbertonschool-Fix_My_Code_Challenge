@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-""" FizzBuzz
-"""
+""" FizzBuzz is fizz with a twist """
 import sys
 
 
@@ -23,7 +22,7 @@ def fizzbuzz(n):
             tmp_result.append("Fizz")
         elif (i % 5) == 0:
             tmp_result.append("Buzz")
-        else:                               
+        else:
             tmp_result.append(str(i))
     print(" ".join(tmp_result))
 
